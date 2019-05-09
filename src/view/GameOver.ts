@@ -3,7 +3,7 @@
 
 class GameOver extends GameObject{
 
-    textGameOver:egret.TextField = null;
+    // textGameOver:egret.TextField = null;
     textScore:egret.TextField = null;
     retryButton:Button = null;
     step:number = 0;
@@ -25,8 +25,8 @@ class GameOver extends GameObject{
     }
 
     onDestroy() {
-        GameObject.display.removeChild( this.textGameOver );
-        this.textGameOver = null;
+        // GameObject.display.removeChild( this.textGameOver );
+        // this.textGameOver = null;
         if( this.textScore ){
             GameObject.display.removeChild( this.textScore );
             this.textScore = null;
@@ -37,7 +37,7 @@ class GameOver extends GameObject{
         if( this.step < this.fadeInFrame ){
             this.step++;
             const a = this.step / this.fadeInFrame;
-            this.textGameOver.alpha = a;
+            // this.textGameOver.alpha = a;
             this.textScore.alpha = a;
             
             if( this.step == this.fadeInFrame ){

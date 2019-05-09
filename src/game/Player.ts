@@ -14,6 +14,11 @@ class Player extends GameObject{
     step:number = 0;
     scale:number = 1;
 
+    get px():number { return this.display.x; }
+    get py():number { return this.display.y; }
+    set px(x:number) { this.display.x = x; }
+    set py(y:number) { this.display.y = y; }
+
     constructor( px:number, py:number ) {
         super();
 
@@ -39,6 +44,16 @@ class Player extends GameObject{
         GameObject.display.addChild(this.display);
         shape.x = px;
         shape.y = py;
+
+        const r = this.radius * 0.6;
+        shape.graphics.lineStyle(2, PLAYER_COLOR2);
+        shape.graphics.beginFill(PLAYER_COLOR2);
+        shape.graphics.moveTo( 0.0*r,-6.0*r);
+        shape.graphics.lineTo(-5.0*r,+3.5*r);
+        shape.graphics.lineTo(+5.0*r,+3.5*r);
+        shape.graphics.lineTo( 0.0*r,-6.0*r);
+        shape.graphics.endFill();
+        
         shape.graphics.beginFill( PLAYER_COLOR );
         shape.graphics.drawCircle( 0, 0, this.radius );
         shape.graphics.endFill();
@@ -72,8 +87,10 @@ class Player extends GameObject{
         }
     }
 
-    get px():number { return this.display.x; }
-    get py():number { return this.display.y; }
-    set px(x:number) { this.display.x = x; }
-    set py(y:number) { this.display.y = y; }
+    hit(){
+        new GameOver();
+        new EffectCircle( this.px, this.py, this.radius*3, PLAYER_COLOR );
+        EffectLine.create( this.px, this.py, this.radius*3, PLAYER_COLOR );
+        this.setStateNone();
+    }
 }
