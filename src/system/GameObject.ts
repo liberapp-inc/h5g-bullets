@@ -20,10 +20,15 @@ abstract class GameObject {
     destroy() { this.deleteFlag = true; }
     onDestroy(){}
 
+    get px():number { return this.display.x; }
+    get py():number { return this.display.y; }
+    set px(x:number) { this.display.x = x; }
+    set py(y:number) { this.display.y = y; }
+
     // system
-    private static objects: GameObject[] = [];
     public static display: egret.DisplayObjectContainer;
     public static transit:()=>void;
+    private static objects: GameObject[] = [];
 
     static initial(displayObjectContainer: egret.DisplayObjectContainer){
         GameObject.display = displayObjectContainer;

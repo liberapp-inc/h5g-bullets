@@ -7,18 +7,15 @@ class Bullet extends GameObject{
     vy:number;
     radius:number;
 
-    get px():number { return this.display.x; }
-    get py():number { return this.display.y; }
-    set px(x:number) { this.display.x = x; }
-    set py(y:number) { this.display.y = y; }
-
-    constructor( px:number, py:number, angle:number, speed:number, radius:number, color:number ) {
+    constructor( px:number, py:number, degree:number, speed:number, size:number ) {
         super();
 
-        this.vx = Math.sin(angle) * speed;
-        this.vy = Math.cos(angle) * speed;
-        this.radius = radius;
-        this.setDisplay( px, py, color );
+        const radian = degree * Deg2Rad;
+        speed *= Util.w(BULLET_SPEED_PER_W);
+        this.vx = -Math.sin(radian) * speed;
+        this.vy =  Math.cos(radian) * speed;
+        this.radius = Util.w(BULLET_RADIUS_PER_W) * size;
+        this.setDisplay( px, py, BULLET_COLOR );
     }
 
     setDisplay( px:number, py:number, color:number ){

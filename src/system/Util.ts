@@ -1,6 +1,9 @@
 // Liberapp 2019 - Tahiti Katagai
 // ゲームで便利に使えるUtilityクラス
 
+const Deg2Rad = (Math.PI/180);
+const Rad2Deg = (180/Math.PI);
+
 class Util{
 
     public static width:  number;
