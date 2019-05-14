@@ -76,11 +76,13 @@ class Player extends GameObject{
         }
         else{
             this.px = Util.clamp( this.button.x + this.buttonOffsetX, this.radius, Util.width  - this.radius );
-            this.py = Util.clamp( this.button.y + this.buttonOffsetY, this.radius, Util.height - this.radius );
+            this.py = Util.clamp( this.button.y + this.buttonOffsetY, this.radius, Util.h(0.9) - this.radius );
             this.buttonOffsetX = this.px - this.button.x;
             this.buttonOffsetY = this.py - this.button.y;
         }
     }
+
+    stateGameOver(){}
 
     hit(){
         if( this.state != this.stateMove ) return;
@@ -88,6 +90,6 @@ class Player extends GameObject{
         new GameOver();
         new EffectCircle( this.px, this.py, this.radius*3, PLAYER_COLOR );
         EffectLine.create( this.px, this.py, this.radius*3, PLAYER_COLOR );
-        this.setStateNone();
+        this.state = this.stateGameOver;
     }
 }

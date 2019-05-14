@@ -18,6 +18,7 @@ const ENEMY_COLOR1 = 0x80e0ff;
 class Game {
 
     static loadSceneGamePlay() {
+        new Background();
         new Score();
         new Player( Util.width * 0.5, Util.height * 0.80 );
         new Wave();

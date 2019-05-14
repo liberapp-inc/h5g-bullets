@@ -19,7 +19,7 @@ class GameOver extends GameObject{
             if( Score.I.point >= Score.I.bestScore ){
                 egret.localStorage.setItem(SAVE_KEY_BESTSCORE, Score.I.point.toFixed() ); // string
             }
-            this.textScore = Util.newTextField("SCORE : " + Score.I.point.toFixed(), Util.width / 14, FONT_COLOR, 0.5, 0.50, true, false);
+            this.textScore = Util.newTextField("SCORE : " + Score.I.point.toFixed(), Util.width / 12, FONT_COLOR, 0.5, 0.35, true, false);
             GameObject.display.addChild( this.textScore );
         }
     }
