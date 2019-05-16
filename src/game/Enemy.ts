@@ -5,7 +5,7 @@ enum BType{
     Ball,
     Spear,
     Laser,
-    Set = 100,
+    None = 100,
     Loop,
     Terminate,
 }
@@ -13,7 +13,7 @@ enum BType{
 enum BAim{
     Player,
     Direct,     // 真下方向がゼロ (時計回り)
-    Memory,     // BType.Noneのとき方向を記録。BBase.Memory指定で参照する
+    Memory,     // BType.Noneのとき記録した方向に撃つ
     Random,     // ランダム方向(degree360方向+range360範囲ランダム)
 }
 
@@ -51,7 +51,7 @@ class Enemy extends GameObject{
         this.data = dataList[0];
         this.speed = 1 + 3 * Wave.hardRate;
         this.frame = this.speed;
-        this.setDisplay( px, py, ENEMY_COLOR1 );
+        this.setDisplay( px, py, ENEMY_COLOR );
     }
 
     onDestroy( ){
@@ -98,22 +98,19 @@ class Enemy extends GameObject{
                     this.loopIndex = this.index;
                     this.loopCount = data.size;     // size = loop count
                 }
-
                 if( (--this.loopCount) > 0 ){
                     this.index = 0;
-                    // this.frame = 0;
-                }
-                else{
+                }else{
                     // end loop
                     this.loopIndex = 0;
-                    this.frame = 0;
                     this.index++;
                 }
+                //this.frame = 1; // 重複予防 ループではかならず１フレ経過させる    
                 break;
 
-                case BType.Set:
+                case BType.None:
                 this.degree360 = this.getDegree( data );
-                this.frame = data.frame;
+                this.frame += data.frame;
                 this.index++;
                 break;
 
@@ -179,21 +176,21 @@ class Enemy extends GameObject{
 
     terminate(){
         this.destroy();
-        new EffectCircle( this.px, this.py, this.display.getBounds().width * 2, ENEMY_COLOR1 );
+        new EffectCircle( this.px, this.py, this.display.getBounds().width * 2, EFFECT_COLOR );
         this.data = null;
         this.dataList = null;
     }
 
     //----------------------
 
-    // 1way 1way 1,2,3,4,5way  60*3+80
+    // 1way 1way 1,2,3,4,5way  260*2
     static data0:BData[] = [
         //
         { type:BType.Ball, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:1, frame:60 },
 
         { type:BType.Ball, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:1, frame:60 },
         
-        { type:BType.Set, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:1, frame:0 },
+        { type:BType.None, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:1, frame:0 },
         { type:BType.Ball, aim:BAim.Memory, degree360:0, way:1, range360:0, speed:1.0, size:1, frame:20 },
         { type:BType.Ball, aim:BAim.Memory, degree360:0, way:2, range360:15, speed:1.0, size:1, frame:20 },
         { type:BType.Ball, aim:BAim.Memory, degree360:0, way:3, range360:30, speed:1.0, size:1, frame:20 },
@@ -206,11 +203,11 @@ class Enemy extends GameObject{
     static dataList0:BData[][] = [Enemy.data0];
 
 
-    // rapid 100  8*100
+    // rapid 100  8*20
     static data1:BData[] = [
         //
-        { type:BType.Ball, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.2, size:1, frame:8 },
-        { type:BType.Loop, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:100, frame:0 },
+        { type:BType.Ball, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.4, size:1, frame:8 },
+        { type:BType.Loop, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:20, frame:0 },
 
         { type:BType.Terminate, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:1, frame:0 },
     ];
@@ -239,7 +236,7 @@ class Enemy extends GameObject{
 
     // 中 1way x 4times   90*4
     static data4:BData[] = [
-        { type:BType.Ball, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.2, size:1.5, frame:90 },
+        { type:BType.Ball, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.4, size:1.5, frame:90 },
         { type:BType.Loop, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:4, frame:0 },
 
         { type:BType.Terminate, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:1, frame:0 },
@@ -247,14 +244,25 @@ class Enemy extends GameObject{
     static dataList4:BData[][] = [Enemy.data4];
     
 
-    // 15way x 3times  75*3
-    static data5:BData[] = [
-        { type:BType.Ball, aim:BAim.Player, degree360:0, way:15, range360:240, speed:1.0, size:1, frame:75 },
-        { type:BType.Loop, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:4, frame:0 },
-
+    // 15way x 3times  60+90*3
+    static data50:BData[] = [
+        { type:BType.None, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:1, frame:60 },
+    ];
+    static data51:BData[] = [
+        { type:BType.Ball, aim:BAim.Memory, degree360:0, way:2, range360:240, speed:1.0, size:1, frame:2 },
+        { type:BType.Ball, aim:BAim.Memory, degree360:0, way:2, range360:210, speed:1.0, size:1, frame:2 },
+        { type:BType.Ball, aim:BAim.Memory, degree360:0, way:2, range360:180, speed:1.0, size:1, frame:2 },
+        { type:BType.Ball, aim:BAim.Memory, degree360:0, way:2, range360:150, speed:1.0, size:1, frame:2 },
+        { type:BType.Ball, aim:BAim.Memory, degree360:0, way:2, range360:120, speed:1.0, size:1, frame:2 },
+        { type:BType.Ball, aim:BAim.Memory, degree360:0, way:2, range360:90, speed:1.0, size:1, frame:2 },
+        { type:BType.Ball, aim:BAim.Memory, degree360:0, way:2, range360:60, speed:1.0, size:1, frame:2 },
+        { type:BType.Ball, aim:BAim.Memory, degree360:0, way:2, range360:30, speed:1.0, size:1, frame:2 },
+        { type:BType.Ball, aim:BAim.Memory, degree360:0, way:1, range360:0, speed:1.0, size:1.5, frame:90-16 },
+    ];
+    static data52:BData[] = [
         { type:BType.Terminate, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:1, frame:0 },
     ];
-    static dataList5:BData[][] = [Enemy.data5];
+    static dataList5:BData[][] = [Enemy.data50,Enemy.data51, Enemy.data50,Enemy.data51, Enemy.data50,Enemy.data51, Enemy.data52];
     
 
     // 真下 列弾  20*6
@@ -269,11 +277,94 @@ class Enemy extends GameObject{
     
     // ハの字 列弾  20*4
     static data7:BData[] = [
-        { type:BType.Ball, aim:BAim.Direct, degree360:0, way:2, range360:30, speed:1.2, size:1, frame:20 },
+        { type:BType.Ball, aim:BAim.Direct, degree360:0, way:2, range360:20, speed:1.2, size:1, frame:20 },
         { type:BType.Loop, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:4, frame:0 },
 
         { type:BType.Terminate, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:1, frame:0 },
     ];
     static dataList7:BData[][] = [Enemy.data7];
+    
+    
+    // うずまき弾  60+(16*18)*3
+    static data80:BData[] = [
+        { type:BType.None,  aim:BAim.Direct, degree360:0,    way:0, range360:0,      speed:1.0, size:1, frame:60 },
+    ];
+    static data81:BData[] = [
+        { type:BType.Ball, aim:BAim.Memory, degree360:0+45, way:4, range360:360-90, speed:1.0, size:1, frame:12 },
+        { type:BType.None,  aim:BAim.Memory, degree360:0,   way:0, range360:0,      speed:1.0, size:1, frame:0 },
+        { type:BType.Loop, aim:0, degree360:0,    way:0, range360:0,      speed:1.0, size:18, frame:1 },
+    ];
+    static data82:BData[] = [
+        { type:BType.Ball, aim:BAim.Memory, degree360:0+45, way:4, range360:360-90, speed:1.0, size:1, frame:12 },
+        { type:BType.None,  aim:BAim.Memory, degree360:+5,   way:0, range360:0,      speed:1.0, size:1, frame:0 },
+        { type:BType.Loop, aim:0, degree360:0,    way:0, range360:0,      speed:1.0, size:18, frame:1 },
+    ];
+    static data83:BData[] = [
+        { type:BType.Ball, aim:BAim.Memory, degree360:0+45, way:4, range360:360-90, speed:1.0, size:1, frame:12 },
+        { type:BType.None, aim:BAim.Memory, degree360:-5,   way:0, range360:0,      speed:1.0, size:1, frame:0 },
+        { type:BType.Loop, aim:0, degree360:0,    way:0, range360:0,      speed:1.0, size:18, frame:1 },
+    ];
+    static data84:BData[] = [
+        { type:BType.Terminate, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:1, frame:0 },
+    ];
+    static dataList8:BData[][] = [Enemy.data80, Enemy.data81, Enemy.data82, Enemy.data83, Enemy.data84];
+    
+    
+    // rapid 100  8*100
+    static data9:BData[] = [
+        //
+        { type:BType.Ball, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:1, frame:8 },
+        { type:BType.Loop, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:100, frame:0 },
+
+        { type:BType.Terminate, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:1, frame:0 },
+    ];
+    static dataList9:BData[][] = [Enemy.data9];
+    
+    
+    // 5way ２重拡散弾  120*2
+    static data10:BData[] = [
+        //
+        { type:BType.None, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:1, frame:60 },
+        
+        { type:BType.None, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:1, frame:0 },
+        { type:BType.Ball, aim:BAim.Memory, degree360:0, way:3, range360:60, speed:0.8, size:1, frame:0 },
+        { type:BType.Ball, aim:BAim.Memory, degree360:0, way:2, range360:30, speed:0.7, size:1.5, frame:16 },
+        { type:BType.Ball, aim:BAim.Memory, degree360:0, way:3, range360:60, speed:1.1, size:1, frame:0 },
+        { type:BType.Ball, aim:BAim.Memory, degree360:0, way:2, range360:30, speed:1.0, size:1.5, frame:60-16 },
+
+        { type:BType.Loop, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:2, frame:0 },
+
+        { type:BType.Terminate, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:1, frame:0 },
+    ];
+    static dataList10:BData[][] = [Enemy.data10];
+    
+    
+    // 5way 列弾　60+140*2
+    static data11_0:BData[] = [
+        { type:BType.None, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:1, frame:60 },
+    ];
+    static data11_1:BData[] = [
+        { type:BType.None, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:1, frame:0 },
+        { type:BType.Ball, aim:BAim.Memory, degree360:0, way:5, range360:120, speed:0.7, size:1, frame:4 },
+        { type:BType.Ball, aim:BAim.Memory, degree360:0, way:5, range360:120, speed:0.8, size:1, frame:4 },
+        { type:BType.Ball, aim:BAim.Memory, degree360:0, way:5, range360:120, speed:0.9, size:1, frame:4 },
+        { type:BType.Ball, aim:BAim.Memory, degree360:0, way:5, range360:120, speed:1.0, size:1, frame:4 + 120 },
+        
+        { type:BType.Loop, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:2, frame:0 },
+
+        { type:BType.Terminate, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:1, frame:0 },
+    ];
+    static dataList11:BData[][] = [Enemy.data11_0, Enemy.data11_1];
+
+
+    // 中 スピード
+    static data12:BData[] = [
+        { type:BType.Ball, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.5, size:1.25, frame:0 },
+        { type:BType.Ball, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.4, size:1.25, frame:0 },
+        { type:BType.Ball, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.3, size:1.25, frame:10 },
+
+        { type:BType.Terminate, aim:BAim.Player, degree360:0, way:0, range360:0, speed:1.0, size:1, frame:0 },
+    ];
+    static dataList12:BData[][] = [Enemy.data12];    
 }
 

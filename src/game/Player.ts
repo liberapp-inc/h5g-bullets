@@ -41,8 +41,8 @@ class Player extends GameObject{
         shape.y = py;
 
         const r = this.radius * 0.75;
-        shape.graphics.lineStyle(2, PLAYER_COLOR2);
-        // shape.graphics.beginFill(PLAYER_COLOR2);
+        shape.graphics.lineStyle(2, PLAYER_COLOR);
+        // shape.graphics.beginFill(PLAYER_COLOR);
         shape.graphics.moveTo( 0.0*r,-6.5*r);
         shape.graphics.lineTo(-5.0*r,+3.5*r);
         shape.graphics.lineTo(+5.0*r,+3.5*r);
@@ -85,8 +85,8 @@ class Player extends GameObject{
     stateGameOver(){}
 
     hit(){
-        if( this.state != this.stateMove ) return;
-
+        if( this.state != this.stateMove )
+            return;
         new GameOver();
         new EffectCircle( this.px, this.py, this.radius*3, PLAYER_COLOR );
         EffectLine.create( this.px, this.py, this.radius*3, PLAYER_COLOR );

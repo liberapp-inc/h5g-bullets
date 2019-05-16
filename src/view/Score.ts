@@ -37,15 +37,13 @@ class Score extends GameObject{
     }
 
     update(){
-        // const px = Wave.I.wave;
+        if( Player.I.state != Player.I.stateMove ) return;
 
-        // if( this.point < px ){
-        //     this.point = px;
-        //     this.text.text = "" + this.point.toFixed();
-        //     if( this.bestScore < this.point ){
-        //         this.bestScore = this.point;
-        //         this.textBest.text = "BEST:" + this.point.toFixed();
-        //     }
-        // }
+        this.point += 1/60;
+        this.text.text = "" + this.point.toFixed(1);
+        if( this.bestScore < this.point ){
+            this.bestScore = this.point;
+            this.textBest.text = "BEST:" + this.point.toFixed(1);
+        }
     }
 }
