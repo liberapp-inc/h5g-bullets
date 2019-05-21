@@ -68,15 +68,16 @@ class Player extends GameObject{
         this.step = 0;
     }
     stateMove() {
-        // Camera2D.y -= this.scrollSpeed;
-
         if( this.button.press ){
             this.buttonOffsetX = this.px - this.button.x;
             this.buttonOffsetY = this.py - this.button.y;
         }
         else{
-            this.px = Util.clamp( this.button.x + this.buttonOffsetX, this.radius, Util.width  - this.radius );
-            this.py = Util.clamp( this.button.y + this.buttonOffsetY, this.radius, Util.h(0.9) - this.radius );
+            const rate = 1.25;
+            let vx = this.button.x + this.buttonOffsetX - this.px;
+            let vy = this.button.y + this.buttonOffsetY - this.py;
+            this.px = Util.clamp( this.px + vx * rate, this.radius, Util.width  - this.radius );
+            this.py = Util.clamp( this.py + vy * rate, this.radius, Util.h(0.9) - this.radius );
             this.buttonOffsetX = this.px - this.button.x;
             this.buttonOffsetY = this.py - this.button.y;
         }
