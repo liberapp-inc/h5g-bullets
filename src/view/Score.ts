@@ -4,9 +4,10 @@
 class Score extends GameObject{
 
     static I:Score = null;   // singleton instance
+    static bestScore:number = 0;
+    static bestRank:number = 0;
 
     point:number = 0;
-    bestScore:number = 0;
     text:egret.TextField = null;
     textBest:egret.TextField = null;
 
@@ -18,13 +19,7 @@ class Score extends GameObject{
         this.text = Util.newTextField("0", Util.width / 22, FONT_COLOR, 0.5, 0.0, true, true);
         GameObject.display.addChild( this.text );
 
-        let bestScore = egret.localStorage.getItem(SAVE_KEY_BESTSCORE); // string
-        if( bestScore == null ){
-            bestScore = "15";
-            egret.localStorage.setItem(SAVE_KEY_BESTSCORE, bestScore);
-        }
-        this.bestScore = parseInt( bestScore );
-        this.textBest = Util.newTextField("BEST:" + bestScore + "", Util.width / 22, FONT_COLOR, 0.0, 0.0, true, true);
+        this.textBest = Util.newTextField("BEST:" + Score.bestScore + "", Util.width / 22, FONT_COLOR, 0.0, 0.0, true, true);
         GameObject.display.addChild( this.textBest );
     }
     
@@ -41,8 +36,7 @@ class Score extends GameObject{
 
         this.point += 1/60;
         this.text.text = "" + this.point.toFixed(1);
-        if( this.bestScore < this.point ){
-            this.bestScore = this.point;
+        if( Score.bestScore < this.point ){
             this.textBest.text = "BEST:" + this.point.toFixed(1);
         }
     }

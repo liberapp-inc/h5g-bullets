@@ -1,0 +1,20 @@
+{
+  "title": "弾幕よけろ！",
+  "lead": "飛んでくる弾幕をとにかくよけるんだ！",
+  "description": "飛んでくる弾をとにかくよけるんだ！弾が多すぎる？気にしてはいけない。パターンを覚えてうまくよけろ！慣れてきたら弾を誘導してみよう。自機キャラのヒット判定は中心のマルの部分だけだぞ！",
+  
+  "useLeaderboard": true,
+  "sdkVersion": "0.9",
+  "leaderboards": [
+    {
+      "name": "default",
+      "displayName": "ハイスコア",
+      "sortOrder": "HIGHER_IS_BETTER",
+      "scoreType": "CUSTOM",
+      "unit": "pt",
+      "decimalOffset": 0
+    }
+  ],
+  "author": "Liberapp",
+  "copyright": "Liberapp. Created by Tahiti Katagai"
+}
